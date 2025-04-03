@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic-tac-toe</title>
+    <link rel="icon" href="logo.png" type="image/png"> 
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(150deg, #1a237e, #00acc1);
+            font-family: 'Nunito', sans-serif;
+            color: #e1f5fe;
+            text-align: center;
+        }
+
+        /* ... (rest of your CSS styles) ... */
+
+        .logo {
+            width: 150px;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 3.5em;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+            letter-spacing: 2px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .game-button {
+            padding: 20px 40px;
+            font-size: 1.3em;
+            cursor: pointer;
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .game-button:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .copyright {
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #b0bec5;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <img src="logo.png" alt="Tic-tac-toe Logo" class="logo">
+    <div class="title">Tic-tac-toe</div>
+    <div class="button-container">
+        <a href="friends.html" class="game-button">Play with Friends</a>
+        <a href="hard-ai.html" class="game-button">Play with AI</a>
+    </div>
+    <div class="copyright"> &copy; Arise Games <br>
+   Developer:Aayush Lamsal</div>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hard BOT</title> 
+    <link rel="icon" href="logo.png" type="image/png"> 
+
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(160deg, #1c2833, #2c3e50); /* Darker, more subdued gradient */
+    font-family: 'Roboto', sans-serif; /* Clean, modern font */
+    color: #ecf0f1; /* Light gray text */
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-gap: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px); /* More pronounced blur */
+  }
+
+  .cell {
+    width: 100px;
+    height: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.8em;
+    cursor: pointer;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.05));
+    border-radius: 8px;
+    transition: transform 0.2s ease, background 0.3s ease, border 0.3s ease;
+  }
+
+  .cell:hover {
+    transform: scale(1.03);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.1));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  #message {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 2em;
+    font-weight: 500;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  }
+
+  #resetButton {
+    margin-top: 30px;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    cursor: pointer;
+    background: linear-gradient(135deg, #3498db, #2980b9); /* Softer blue gradient */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, background 0.3s ease;
+  }
+
+  #resetButton:hover {
+    transform: scale(1.02);
+    background: linear-gradient(135deg, #2980b9, #3498db);
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div>
+    <div class="board" id="board">
+      <div class="cell" data-index="0"></div>
+      <div class="cell" data-index="1"></div>
+      <div class="cell" data-index="2"></div>
+      <div class="cell" data-index="3"></div>
+      <div class="cell" data-index="4"></div>
+      <div class="cell" data-index="5"></div>
+      <div class="cell" data-index="6"></div>
+      <div class="cell" data-index="7"></div>
+      <div class="cell" data-index="8"></div>
+    </div>
+    <div id="message"></div>
+    <button id="resetButton" onclick="resetGame()">Reset Game</button>
+  </div>
+
+  <script>
+    // ... (JavaScript code from previous response remains the same) ...
+    const cells = document.querySelectorAll('.cell');
+    const message = document.getElementById('message');
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let currentPlayer = 'X';
+    let gameActive = true;
+
+    const winningCombinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    function checkWin() {
+      for (const combination of winningCombinations) {
+        const [a, b, c] = combination;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+          gameActive = false;
+          message.textContent = `${board[a]} wins!`;
+          return;
+        }
+      }
+
+      if (!board.includes('')) {
+        gameActive = false;
+        message.textContent = "It's a tie!";
+      }
+    }
+
+    function handleCellClick(e) {
+      if (!gameActive) return;
+
+      const cell = e.target;
+      const index = cell.dataset.index;
+
+      if (board[index] === '') {
+        board[index] = currentPlayer;
+        cell.textContent = currentPlayer;
+        checkWin();
+        if (gameActive) {
+          currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+          if(currentPlayer === 'O'){
+            setTimeout(aiMove, 500);
+          }
+        }
+      }
+    }
+
+    function aiMove(){
+      let bestMove = getBestMove(board);
+      if(bestMove !== null){
+        board[bestMove] = 'O';
+        cells[bestMove].textContent = 'O';
+        checkWin();
+        if(gameActive){
+          currentPlayer = 'X';
+        }
+      }
+    }
+
+    function getBestMove(boardState){
+      let bestScore = -Infinity;
+      let move = null;
+      for(let i = 0; i < 9; i++){
+        if(boardState[i] === ''){
+          boardState[i] = 'O';
+          let score = minimax(boardState, 0, false);
+          boardState[i] = '';
+          if(score > bestScore){
+            bestScore = score;
+            move = i;
+          }
+        }
+      }
+      return move;
+    }
+
+    function minimax(boardState, depth, isMaximizing){
+      const scores = {
+        X: -1,
+        O: 1,
+        tie: 0
+      };
+
+      for (const combination of winningCombinations) {
+        const [a, b, c] = combination;
+        if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
+          return scores[boardState[a]];
+        }
+      }
+
+      if(!boardState.includes('')){
+        return scores.tie;
+      }
+
+      if(isMaximizing){
+        let bestScore = -Infinity;
+        for(let i = 0; i < 9; i++){
+          if(boardState[i] === ''){
+            boardState[i] = 'O';
+            let score = minimax(boardState, depth + 1, false);
+            boardState[i] = '';
+            bestScore = Math.max(score, bestScore);
+          }
+        }
+        return bestScore;
+      } else {
+        let bestScore = Infinity;
+        for(let i = 0; i < 9; i++){
+          if(boardState[i] === ''){
+            boardState[i] = 'X';
+            let score = minimax(boardState, depth + 1, true);
+            boardState[i] = '';
+            bestScore = Math.min(score, bestScore);
+          }
+        }
+        return bestScore;
+      }
+    }
+
+    cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+
+    function resetGame() {
+      board = ['', '', '', '', '', '', '', '', ''];
+      gameActive = true;
+      currentPlayer = 'X';
+      message.textContent = '';
+      cells.forEach(cell => (cell.textContent = ''));
+    }
+  </script>
+</body>
+</html>
