@@ -1,1 +1,7 @@
 # Tic-tac-toe-1.0
+banner-ad
+ca-app-pub-7014552709903965/9255423930
+interstial 
+ca-app-pub-7014552709903965/6732964695
+publisher 
+ca-app-pub-7014552709903965~2147052111
